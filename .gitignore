@@ -1,0 +1,6 @@
+.vagrant/
+.idea/
+# maven builds
+**/target/*
+*.iml
+Vagrantfile
