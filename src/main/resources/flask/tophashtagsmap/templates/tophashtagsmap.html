@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Top hashtags Map</title>
+    <style>
+        svg .bg, svg .bgback {
+            stroke: none;
+            fill: #fff;
+            fill-opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+<div style="text-align: center">
+    <h3>Geolocalization of tweets containing top hashtags</h3>
+</div>
+<p>&nbsp;</p>
+
+<div style="float: left" id="top_hashtags">Top N hashtags:</div>
+<div>
+    <div id="map" style="align: auto"></div>
+    <p>&nbsp;</p>
+
+    <div id="tweet"></div>
+</div>
+</body>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/d3.geo.projection.v0.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="/static/map.js"></script>
+<script src="/static/storm_connector.js"></script>
+
+</html>
