@@ -35,7 +35,7 @@ public class FileWriteBolt extends BaseBasicBolt {
     }
 
     @Override
-    public void execute(Tuple input, BasicOutputCollector collector) {
+    public void execute(Tuple tuple, BasicOutputCollector collector) {
         try {
             writer.write(tuple.getInteger(0) + "\n");
         }
