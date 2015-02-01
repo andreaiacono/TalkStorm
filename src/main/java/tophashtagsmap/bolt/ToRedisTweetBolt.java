@@ -1,9 +1,9 @@
 package tophashtagsmap.bolt;
 
-import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
+import backtype.storm.topology.BasicOutputCollector;
 import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.topology.base.BaseRichBolt;
+import backtype.storm.topology.base.BaseBasicBolt;
 import backtype.storm.tuple.Tuple;
 import com.lambdaworks.redis.RedisClient;
 import com.lambdaworks.redis.RedisConnection;
@@ -16,20 +16,20 @@ import java.util.Map;
  * Date: 24/12/14
  * Time: 15.13
  */
-public class ToRedisTweetBolt  extends BaseRichBolt {
+public class ToRedisTweetBolt  extends BaseBasicBolt {
 
-    transient RedisConnection<String, String> redis;
+    private transient RedisConnection<String, String> redis;
 
     @Override
-    public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
-
+    public void prepare(Map stormConf, TopologyContext context) {
+        super.prepare(stormConf, context);
         RedisClient client = new RedisClient("localhost", 6379);
         redis = client.connect();
     }
 
-    @Override
-    public void execute(Tuple tuple) {
 
+    @Override
+    public void execute(Tuple tuple, BasicOutputCollector collector) {
         // gets the tweet and its rank (based on hashtags contained in the tweet)
         String lat = tuple.getString(0);
         String lon = tuple.getString(1);

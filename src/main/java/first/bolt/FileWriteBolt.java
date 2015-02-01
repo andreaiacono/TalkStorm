@@ -1,9 +1,9 @@
 package first.bolt;
 
-import backtype.storm.task.OutputCollector;
 import backtype.storm.task.TopologyContext;
+import backtype.storm.topology.BasicOutputCollector;
 import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.topology.base.BaseRichBolt;
+import backtype.storm.topology.base.BaseBasicBolt;
 import backtype.storm.tuple.Tuple;
 
 import java.io.BufferedWriter;
@@ -14,25 +14,16 @@ import java.util.Map;
 /**
  * A bolt that write the received values on a file.
  */
-public class FileWriteBolt extends BaseRichBolt {
+public class FileWriteBolt extends BaseBasicBolt {
 
     private final String filename = "output.txt";
-    private BufferedWriter oWriter = null;
-    @Override
-    public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
-
-        try {
-            oWriter = new BufferedWriter(new FileWriter(filename, true));
-        }
-        catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    private BufferedWriter writer = null;
 
     @Override
-    public void execute(Tuple tuple) {
+    public void prepare(Map stormConf, TopologyContext context) {
+        super.prepare(stormConf, context);
         try {
-            oWriter.write(tuple.getInteger(0) + "\n");
+            writer = new BufferedWriter(new FileWriter(filename, true));
         }
         catch (IOException e) {
             e.printStackTrace();
@@ -44,9 +35,19 @@ public class FileWriteBolt extends BaseRichBolt {
     }
 
     @Override
+    public void execute(Tuple input, BasicOutputCollector collector) {
+        try {
+            writer.write(tuple.getInteger(0) + "\n");
+        }
+        catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
     public void cleanup() {
         try {
-            oWriter.close();
+            writer.close();
         }
         catch (IOException e) {
             e.printStackTrace();

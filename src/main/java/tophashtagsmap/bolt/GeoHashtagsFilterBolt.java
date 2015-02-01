@@ -1,9 +1,8 @@
 package tophashtagsmap.bolt;
 
-import backtype.storm.task.OutputCollector;
-import backtype.storm.task.TopologyContext;
+import backtype.storm.topology.BasicOutputCollector;
 import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.topology.base.BaseRichBolt;
+import backtype.storm.topology.base.BaseBasicBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
@@ -12,27 +11,20 @@ import tophashtagsmap.tools.Rankable;
 import tophashtagsmap.tools.Rankings;
 import tophashtagsmap.utils.MiscUtils;
 
-import java.util.Arrays;
-import java.util.Map;
 import java.util.Set;
 
 
-public class GeoHashtagsFilterBolt extends BaseRichBolt {
-
-
-    private OutputCollector collector;
+public class GeoHashtagsFilterBolt extends BaseBasicBolt {
 
     private Rankings rankings;
 
     @Override
-    public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
-
-        collector = outputCollector;
+    public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
+        outputFieldsDeclarer.declare(new Fields("tweet", "lat", "lon", "hashtag"));
     }
 
     @Override
-    public void execute(Tuple tuple) {
-
+    public void execute(Tuple tuple, BasicOutputCollector collector) {
         String componentId = tuple.getSourceComponent();
 
         // if the message comes from the NoHashtagDropper
@@ -57,10 +49,5 @@ public class GeoHashtagsFilterBolt extends BaseRichBolt {
             // TODO: check if is changed
             rankings = (Rankings) tuple.getValue(0);
         }
-    }
-
-    @Override
-    public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-        outputFieldsDeclarer.declare(new Fields("tweet", "lat", "lon", "hashtag"));
     }
 }

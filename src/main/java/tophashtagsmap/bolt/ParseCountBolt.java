@@ -1,9 +1,8 @@
 package tophashtagsmap.bolt;
 
-import backtype.storm.task.OutputCollector;
-import backtype.storm.task.TopologyContext;
+import backtype.storm.topology.BasicOutputCollector;
 import backtype.storm.topology.OutputFieldsDeclarer;
-import backtype.storm.topology.base.BaseRichBolt;
+import backtype.storm.topology.base.BaseBasicBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import backtype.storm.tuple.Values;
@@ -15,22 +14,19 @@ import java.util.Map;
 /**
  * A bolt that parses and counts the hashtags it receives
  */
-public class ParseCountBolt extends BaseRichBolt {
+public class ParseCountBolt extends BaseBasicBolt {
 
-    private OutputCollector collector;
-    private Map<String, Long> countMap;
+    private Map<String, Long> countMap = new HashMap<>();
 
     @Override
-    public void prepare(Map map, TopologyContext topologyContext, OutputCollector outputCollector) {
-        collector = outputCollector;
-        countMap = new HashMap<>();
+    public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
+        outputFieldsDeclarer.declare(new Fields("hashtag", "count"));
     }
 
     @Override
-    public void execute(Tuple tuple) {
-
+    public void execute(Tuple tuple, BasicOutputCollector collector) {
         String tweet = tuple.getString(0);
-        MiscUtils.getHashtags(tweet).stream().forEach(h -> updateAndEmitHashtagCount(h));
+        MiscUtils.getHashtags(tweet).stream().forEach(h -> updateAndEmitHashtagCount(h, collector));
     }
 
     /**
@@ -39,7 +35,7 @@ public class ParseCountBolt extends BaseRichBolt {
      *
      * @param hashtag
      */
-    private void updateAndEmitHashtagCount(String hashtag) {
+    private void updateAndEmitHashtagCount(String hashtag, BasicOutputCollector collector) {
 
         // check if the hashtag is present in the map
         if (countMap.get(hashtag) == null) {
@@ -58,10 +54,5 @@ public class ParseCountBolt extends BaseRichBolt {
 
         // emit the word and count
         collector.emit(new Values(hashtag, countMap.get(hashtag)));
-    }
-
-    @Override
-    public void declareOutputFields(OutputFieldsDeclarer outputFieldsDeclarer) {
-        outputFieldsDeclarer.declare(new Fields("hashtag", "count"));
     }
 }

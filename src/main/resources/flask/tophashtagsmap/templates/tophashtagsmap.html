@@ -13,18 +13,26 @@
 </head>
 
 <body>
-<div style="text-align: center">
-    <h3>Geolocalization of tweets containing top hashtags</h3>
-</div>
-<p>&nbsp;</p>
-
-<div style="float: left" id="top_hashtags">Top N hashtags:</div>
-<div>
-    <div id="map" style="align: auto"></div>
-    <p>&nbsp;</p>
-
-    <div id="tweet"></div>
-</div>
+<table width="100%">
+    <tr>
+        <td colspan="2" style="text-align: center">
+            <h3>Geolocalization of tweets containing top hashtags</h3>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div style="float: left" id="top_hashtags">Top N hashtags:</div>
+        </td>
+        <td>
+            <div id="map" style="align: auto; float: right"></div>
+        </td>
+    </tr>
+    <tr>
+        <td colspan="2">
+            <div id="tweet"></div>
+        </td>
+    </tr>
+</table>
 </body>
 
 <script src="http://d3js.org/d3.v3.min.js"></script>
