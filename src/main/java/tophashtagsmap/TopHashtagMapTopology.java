@@ -28,17 +28,17 @@ public class TopHashtagMapTopology {
         GeoTweetSpout geoTweetSpout = new GeoTweetSpout("xxx", "xxx", "xxx", "xxx");
 
         TopologyBuilder builder = new TopologyBuilder();
-        builder.setSpout(GEO_TWEET_SPOUT, geoTweetSpout, 1);
+        builder.setSpout(GEO_TWEET_SPOUT, geoTweetSpout, 5);
 
         builder.setBolt(NO_HASHTAG_DROPPER_BOLT, new NoHashtagDropperBolt(), 5).shuffleGrouping(GEO_TWEET_SPOUT);
-        builder.setBolt(PARSE_HASHTAGS_BOLT, new ParseBolt(), 5).shuffleGrouping(NO_HASHTAG_DROPPER_BOLT);
-        builder.setBolt(COUNT_HASHTAGS_BOLT, new CountBolt(), 5).fieldsGrouping(PARSE_HASHTAGS_BOLT, new Fields("hashtag"));
+        builder.setBolt(PARSE_HASHTAGS_BOLT, new ParseTweetBolt(), 5).shuffleGrouping(NO_HASHTAG_DROPPER_BOLT);
+        builder.setBolt(COUNT_HASHTAGS_BOLT, new CountHashtagsBolt(), 5).fieldsGrouping(PARSE_HASHTAGS_BOLT, new Fields("hashtag"));
         builder.setBolt(INTERMEDIATE_RANKING_BOLT, new IntermediateRankingsBolt(TOP_NUMBER), 5).fieldsGrouping(COUNT_HASHTAGS_BOLT, new Fields("hashtag"));
         builder.setBolt(TOTAL_RANKING_BOLT, new TotalRankingsBolt(TOP_NUMBER), 1).globalGrouping(INTERMEDIATE_RANKING_BOLT);
         builder.setBolt(TO_REDIS_TOP_HASHTAGS_BOLT, new ToRedisTopHashtagsBolt(), 5).shuffleGrouping(TOTAL_RANKING_BOLT);
 
-        builder.setBolt(GEO_HASHTAG_FILTER_BOLT, new GeoHashtagsFilterBolt(), 1).shuffleGrouping(NO_HASHTAG_DROPPER_BOLT).shuffleGrouping(TOTAL_RANKING_BOLT);
-        builder.setBolt(TO_REDIS_TWEET_BOLT, new ToRedisTweetBolt(), 1).globalGrouping(GEO_HASHTAG_FILTER_BOLT);
+        builder.setBolt(GEO_HASHTAG_FILTER_BOLT, new GeoHashtagsFilterBolt(), 5).shuffleGrouping(NO_HASHTAG_DROPPER_BOLT).shuffleGrouping(TOTAL_RANKING_BOLT);
+        builder.setBolt(TO_REDIS_TWEET_BOLT, new ToRedisTweetBolt(), 5).globalGrouping(GEO_HASHTAG_FILTER_BOLT);
 
         Config conf = new Config();
         conf.setDebug(false);
