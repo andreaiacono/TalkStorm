@@ -11,7 +11,7 @@ import tophashtagsmap.utils.MiscUtils;
 /**
  * A bolt that parses the tweet and emits its hashtags
  */
-public class ParseBolt extends BaseBasicBolt {
+public class ParseTweetBolt extends BaseBasicBolt {
 
     @Override
     public void execute(Tuple tuple, BasicOutputCollector collector) {

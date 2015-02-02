@@ -13,7 +13,7 @@ import java.util.Map;
 /**
  * A bolt that counts the hashtags it receives
  */
-public class CountBolt extends BaseBasicBolt {
+public class CountHashtagsBolt extends BaseBasicBolt {
 
     private Map<String, Long> countMap = new HashMap<>();
 
