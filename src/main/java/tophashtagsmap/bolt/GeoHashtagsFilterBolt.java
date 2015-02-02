@@ -28,7 +28,7 @@ public class GeoHashtagsFilterBolt extends BaseBasicBolt {
         String componentId = tuple.getSourceComponent();
 
         // if the message comes from the NoHashtagDropper
-        if (TopHashtagMapTopology.Bolt.NO_HASHTAG_DROPPER_BOLT.name().equals(componentId)) {
+        if (TopHashtagMapTopology.NO_HASHTAG_DROPPER_BOLT.equals(componentId)) {
             String tweet = tuple.getString(0);
             Set<String> hashtags = MiscUtils.getHashtags(tweet);
             for (String hashtag : hashtags) {
@@ -44,7 +44,7 @@ public class GeoHashtagsFilterBolt extends BaseBasicBolt {
             }
         }
         // if the message comes from the TotalRanker
-        else if (TopHashtagMapTopology.Bolt.TOTAL_RANKING_BOLT.name().equals(componentId)) {
+        else if (TopHashtagMapTopology.TOTAL_RANKING_BOLT.equals(componentId)) {
 
             // TODO: check if is changed
             rankings = (Rankings) tuple.getValue(0);
