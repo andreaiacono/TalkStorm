@@ -19,7 +19,7 @@ source.onmessage = function (event) {
         var values = msg.split("|");
         var html = "<b>Top N hashtags:</b><ol>";
         for (j=1; j<values.length; j+=2) {
-            html += "<li><span dir=\"auto\" style=\"color:" + colors[top_hashtags.indexOf(values[j])] + "\">" + values[j] + "</span> <span><b>[" +  values[j+1] + "]</b></span> </li>";
+            html += "<li><span dir=\"auto\" style=\"color:" + colors[Math.round(j/2)] + "\">" + values[j] + "</span> <span><b>[" +  values[j+1] + "]</b></span> </li>";
             top_hashtags[Math.round(j/2)-1] = values[j];
         }
         html += "</ol>"

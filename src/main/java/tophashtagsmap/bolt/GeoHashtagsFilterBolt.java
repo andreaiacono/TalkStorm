@@ -46,7 +46,7 @@ public class GeoHashtagsFilterBolt extends BaseBasicBolt {
         // if the message comes from the TotalRanker
         else if (TopHashtagMapTopology.TOTAL_RANKING_BOLT.equals(componentId)) {
 
-            // TODO: check if is changed
+            // TODO: send only if it is changed
             rankings = (Rankings) tuple.getValue(0);
         }
     }
