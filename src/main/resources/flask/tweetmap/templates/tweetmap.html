@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Realtime Tweet Map</title>
+    <style>
+        svg .bg, svg .bgback {
+            stroke: none;
+            fill: #fff;
+            fill-opacity: 1;
+        }
+    </style>
+</head>
+
+<body>
+<table width="100%">
+    <tr>
+        <td style="text-align: center">
+            <h3>Realtime geolocalization of tweets</h3>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div id="map" style="align: auto; float: center"></div>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <div id="tweet"></div>
+        </td>
+    </tr>
+</table>
+</body>
+
+<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="http://d3js.org/d3.geo.projection.v0.min.js"></script>
+<script src="http://d3js.org/topojson.v1.min.js"></script>
+<script src="/static/map.js"></script>
+<script src="/static/storm_connector.js"></script>
+
+</html>
