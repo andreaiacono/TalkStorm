@@ -33,7 +33,6 @@ public class RandomValuesTopology {
 
         Config conf = new Config();
         conf.setDebug(false);
-        conf.setMaxTaskParallelism(3);
 
         LocalCluster cluster = new LocalCluster();
         cluster.submitTopology(name, conf, builder.createTopology());

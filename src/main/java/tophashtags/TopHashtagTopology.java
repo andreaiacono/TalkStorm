@@ -35,7 +35,6 @@ class TopHashtagTopology {
 
         Config conf = new Config();
         conf.setDebug(true);
-        conf.setMaxTaskParallelism(3);
 
         LocalCluster cluster = new LocalCluster();
         cluster.submitTopology(name, conf, builder.createTopology());
