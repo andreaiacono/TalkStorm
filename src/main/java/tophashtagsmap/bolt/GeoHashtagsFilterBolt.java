@@ -25,29 +25,32 @@ public class GeoHashtagsFilterBolt extends BaseBasicBolt {
 
     @Override
     public void execute(Tuple tuple, BasicOutputCollector collector) {
+
         String componentId = tuple.getSourceComponent();
 
+        // if the message comes from the TotalRanker
+        if (TopHashtagMapTopology.TOTAL_RANKING_BOLT.equals(componentId)) {
+
+            rankings = (Rankings) tuple.getValue(0);
+            return;
+        }
+
+        if (rankings == null) return;
+
         // if the message comes from the NoHashtagDropper
-        if (TopHashtagMapTopology.NO_HASHTAG_DROPPER_BOLT.equals(componentId)) {
-            String tweet = tuple.getString(0);
-            Set<String> hashtags = MiscUtils.getHashtags(tweet);
-            for (String hashtag : hashtags) {
-                for (Rankable r : rankings.getRankings()) {
-                    String rankedHashtag = r.getObject().toString();
-                    if (hashtag.equals(rankedHashtag)) {
-                        String lat = tuple.getString(1);
-                        String lon = tuple.getString(2);
-                        collector.emit(new Values(lat, lon, hashtag, tweet));
-                        return;
-                    }
+        String tweet = tuple.getString(0);
+        Set<String> hashtags = MiscUtils.getHashtags(tweet);
+        for (String hashtag : hashtags) {
+            for (Rankable r : rankings.getRankings()) {
+                String rankedHashtag = r.getObject().toString();
+                if (hashtag.equals(rankedHashtag)) {
+                    String lat = tuple.getString(1);
+                    String lon = tuple.getString(2);
+                    collector.emit(new Values(lat, lon, hashtag, tweet));
+                    return;
                 }
             }
         }
-        // if the message comes from the TotalRanker
-        else if (TopHashtagMapTopology.TOTAL_RANKING_BOLT.equals(componentId)) {
 
-            // TODO: send only if it is changed
-            rankings = (Rankings) tuple.getValue(0);
-        }
     }
 }
